@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+
 export const Wrapper = styled.div`
   display: flex;
 
@@ -13,7 +14,7 @@ export const Wrapper = styled.div`
 `;
 
 interface IconDivProps {
-  color: string 
+  color: 'yellow-dark' | 'base-text' | 'yellow' | 'purple';
 }
 
 export const WrapperIcon = styled.div<IconDivProps>`
@@ -24,5 +25,5 @@ export const WrapperIcon = styled.div<IconDivProps>`
   border-radius: 25px;
   width: 2rem;
   height: 2rem;
-  background-color: ${(props) => props.theme[`${props.color}`]};
+  background-color: ${({theme, color}) => theme.colors[`${color}`]};
 `;

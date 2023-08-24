@@ -1,12 +1,24 @@
 import {
+  ContentContainer,
   HomeContainer,
   IntroContainer, IntroImage, IntroTextContainer,
-  SlugsContainer, Subtitle, Title
+  SlugsContainer, Subtitle, Title, TitleContent
 } from "./style";
 
 import InfoImg from "../../assets/Info.png";
-import { Slug } from "./Slug";
+import { Slug } from "./components/Slug";
 import { Coffee, ShoppingCart, Package, Timer } from "phosphor-react";
+import { CoffeeItem } from "./components/CoffeItem";
+import TradicionalCoffee from '../../assets/Coffees/Tradicional_Coffee.svg'
+
+const Item = {
+  name: 'Expresso Tradicional',
+  type: ['Tradicional'],
+  description: 'O tradicional café feito com água quente e grãos moídos',
+  image: TradicionalCoffee,
+  price: 9.90,
+  quantity: 1
+}
 
 export function Home() {
   return (
@@ -35,6 +47,10 @@ export function Home() {
           <img src={InfoImg} alt="Imagem de um copo de café" width='100%'/>
         </IntroImage>
       </IntroContainer>
+      <ContentContainer>
+        <TitleContent>Nossos cafés</TitleContent>
+        <CoffeeItem {...Item}/>
+      </ContentContainer>
     </HomeContainer>
   )
 }

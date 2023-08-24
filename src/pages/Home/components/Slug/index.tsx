@@ -4,11 +4,10 @@ import { Wrapper, WrapperIcon } from "./styles";
 interface SlugProps {
   text: string;
   icon: JSX.Element;
-  color: string;
+  color: 'yellow-dark' | 'base-text' | 'yellow' | 'purple';
 }
 
 export function Slug({ text, icon, color }: SlugProps){
-
   return (
     <Wrapper>
       <WrapperIcon color={color}>

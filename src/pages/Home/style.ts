@@ -15,7 +15,7 @@ export const IntroContainer = styled.div`
   flex-direction: row;
   justify-content: center;
 
-  margin-top: 5.875rem;
+  margin: 5.875rem 0;
   gap: 3rem;
 `;
 
@@ -51,4 +51,12 @@ export const SlugsContainer = styled.div`
 
 export const IntroImage = styled.div`
   width: 80%;
+`;
+
+export const ContentContainer = styled.div`
+  margin: 2rem 0 ;
+`;
+
+export const TitleContent = styled(Title)`
+  font-size: 2rem;
 `;
