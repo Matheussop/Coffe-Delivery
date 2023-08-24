@@ -6,7 +6,7 @@ export const HomeContainer = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 1440px;
+  max-width: 64%;
   margin: 0rem 12rem;
 `;
 
@@ -39,6 +39,8 @@ export const Subtitle = styled.h2`
   font-family: '${({ theme }) => theme.fonts.text}';
   font-size: 1.245rem;
   font-weight: 400;
+
+  margin-bottom: 4.1rem;
 `;
 
 export const SlugsContainer = styled.div`
@@ -48,5 +50,5 @@ export const SlugsContainer = styled.div`
 `;
 
 export const IntroImage = styled.div`
-
+  width: 80%;
 `;
