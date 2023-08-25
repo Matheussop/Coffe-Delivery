@@ -32,7 +32,6 @@ export const HeaderContainer = styled.header`
 
       padding: 0.5rem;
       width: 3rem;
-
     }
 
     div {
@@ -53,5 +52,18 @@ export const HeaderContainer = styled.header`
 
       margin-right: 0.125rem;
     }
+  }
+`
+
+export const ItemsQuantityContainer = styled.div`
+  background-color : ${(props) => props.theme.colors['yellow-dark']} !important;
+  height: 1.7rem !important;
+  width: 1.7rem;
+  margin-top: -0.8rem;
+  margin-left: -1.8rem;
+  border-radius: 1rem !important;
+
+  p { 
+    color: ${(props) => props.theme.colors['white']};
   }
 `
