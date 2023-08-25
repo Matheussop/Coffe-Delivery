@@ -9,8 +9,6 @@ export const ItemContainer = styled.div`
 
   border-radius: 6px 36px 6px 36px;
 
-  margin-top: 4.5rem;
-
   img {
     margin-top: -1.2rem;
   }
