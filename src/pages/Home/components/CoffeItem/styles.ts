@@ -7,7 +7,6 @@ export const ItemContainer = styled.div`
 
   background-color: ${({theme}) => theme.colors["base-card"]};
 
-  max-width: 23%;
   border-radius: 6px 36px 6px 36px;
 
   margin-top: 4.5rem;
@@ -30,6 +29,8 @@ export const ItemInfo = styled.div`
   }
 
   h4 {
+    display: flex;
+    flex-direction: row;
     font-family: '${({ theme }) => theme.fonts.text}';
     color: ${({ theme }) => theme.colors["yellow-dark"]};
     font-size: 10px;
@@ -108,4 +109,11 @@ export const QuantityContainer = styled.div`
     color: ${({ theme }) => theme.colors["purple"]};
 
   }
+`;
+
+export const TypeContainer = styled.div`
+  width: auto !important;
+  margin: 0 !important;
+  display: flex;
+  gap: 0.5rem;
 `;

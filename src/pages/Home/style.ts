@@ -55,6 +55,16 @@ export const IntroImage = styled.div`
 
 export const ContentContainer = styled.div`
   margin: 2rem 0 ;
+
+`;
+
+export const CoffeesContainer = styled.div`
+  margin: 2rem 0 ;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  
+  gap: 2rem;
+
 `;
 
 export const TitleContent = styled(Title)`

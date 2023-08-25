@@ -1,4 +1,5 @@
 import {
+  CoffeesContainer,
   ContentContainer,
   HomeContainer,
   IntroContainer, IntroImage, IntroTextContainer,
@@ -7,18 +8,12 @@ import {
 
 import InfoImg from "../../assets/Info.png";
 import { Slug } from "./components/Slug";
+import { CoffeeItemProps } from "./components/CoffeItem";
 import { Coffee, ShoppingCart, Package, Timer } from "phosphor-react";
 import { CoffeeItem } from "./components/CoffeItem";
-import TradicionalCoffee from '../../assets/Coffees/Tradicional_Coffee.svg'
+import { CoffeeData } from "./CoffeesData";
 
-const Item = {
-  name: 'Expresso Tradicional',
-  type: ['Tradicional'],
-  description: 'O tradicional café feito com água quente e grãos moídos',
-  image: TradicionalCoffee,
-  price: 9.90,
-  quantity: 1
-}
+const Items: CoffeeItemProps[] = CoffeeData
 
 export function Home() {
   return (
@@ -49,7 +44,13 @@ export function Home() {
       </IntroContainer>
       <ContentContainer>
         <TitleContent>Nossos cafés</TitleContent>
-        <CoffeeItem {...Item}/>
+        <CoffeesContainer>
+          {
+            Items.map(item  => (
+              <CoffeeItem key={item.name} {...item} />
+            ))
+          }
+        </CoffeesContainer>
       </ContentContainer>
     </HomeContainer>
   )

@@ -1,21 +1,20 @@
 import { useState } from 'react'
 import { ShoppingCart, Plus, Minus } from "phosphor-react";
-import { ItemContainer, ItemInfo, QuantityContainer } from "./styles";
-
-interface CoffeItemProps{
+import { ItemContainer, ItemInfo, QuantityContainer, TypeContainer } from "./styles";
+export interface CoffeeItemProps{
+  id: string;
   name: string;
   type: string[];
   description: string;
   image: string;
   price: number;
-  quantity: number;
 }
 
 export function CoffeeItem(
-  { name, type, description, image, price, quantity }: CoffeItemProps){
+  { name, type, description, image, price }: CoffeeItemProps){
   const priceFormatted = price.toFixed(2).toString().replace('.',',');
-  const [quantityValue, setQuantityValue] = useState<number>(quantity);
-  
+ 
+  const [quantityValue, setQuantityValue] = useState<number>(0);
   const handleSubQuantity = () => {
     if(quantityValue > 0) {
       setQuantityValue(quantityValue - 1);
@@ -28,11 +27,14 @@ export function CoffeeItem(
     <ItemContainer >
       <img src={image} alt={name} />
       <ItemInfo >
-        {
-          type.map((item, index) => (
-            <h4 key={index}>{item.toLocaleUpperCase()}</h4>
-          ))
-        }
+        <TypeContainer>
+          {
+            type.map((item, index) => (
+              <h4 key={index}>{item.toLocaleUpperCase()}</h4>
+            ))
+          }
+        </TypeContainer>
+       
         <h3>{name}</h3>
         <p>{description}</p>
         <div>
