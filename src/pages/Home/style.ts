@@ -7,7 +7,6 @@ export const HomeContainer = styled.main`
   flex-direction: column;
   justify-content: center;
   max-width: 64%;
-  margin: 0rem 12rem;
 `;
 
 export const IntroContainer = styled.div`
