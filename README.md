@@ -23,3 +23,6 @@ Conceitos abordados para construção da aplicação
 - Componentização
 
 Para um bom desafio será necessário estudar sobre reduce em arrays.
+
+![](public/coffeeDeliveryInfo.png "Screen")
+![](public/coffeeDeliveryCoffees.png "Screen2")
