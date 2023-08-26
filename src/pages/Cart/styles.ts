@@ -14,6 +14,21 @@ export const Container = styled.div`
     color: ${(props) => props.theme.colors["base-subtitle"]};
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 1rem;
+
+  }
+
+  h3 {
+    color: ${(props) => props.theme.colors["base-subtitle"]};
+    font-weight: 400;
+    line-height: 130%;
+    font-size: 1rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+    line-height: 130%;
+    color: ${(props) => props.theme.colors["base-text"]};
   }
 `;
 
@@ -37,6 +52,8 @@ export const AddressContainer = styled.div`
   background-color: ${(props) => props.theme.colors["base-card"]};
   padding: 2.2rem;
   gap: 2rem;
+
+  margin-bottom: 0.8rem;
 
   > div:first-child { 
     display: flex;
@@ -80,12 +97,26 @@ export const ComplementContainer = styled.div`
 
 export const PaymentOptionsContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  width: 100%;
   background-color: ${(props) => props.theme.colors["base-card"]};
   padding: 2.2rem;
+  gap: 2rem;
+
+  > div:first-child { 
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  svg{
+    color: ${(props) => props.theme.colors.purple};
+  }
+
 `;
 
 export const PaymentOptions = styled.div`
-
+  display: flex;
+  gap: 0.8rem;
 `;
 
 export const ShopContainer = styled.div`
