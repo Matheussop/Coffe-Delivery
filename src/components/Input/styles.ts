@@ -7,6 +7,9 @@ export const InputContainer = styled.div`
 
   width: 100%;
   background-color: ${(props) => props.theme.colors["base-input"]};
+  border: 1px solid ${(props) => props.theme.colors["base-button"]};
+  border-radius: 10px;
+
 `;
 
 export const Suffix =  styled.span`
@@ -21,9 +24,8 @@ export const Input = styled.input`
 
   width: 100%;
 
-  border-radius: 10px;
   border: none;
-  padding: 16px;
+  padding: 0.9rem;
   color: ${(props) => props.theme.colors["base-text"]};
 
   font-family: ${(props) => props.theme.fonts.text};

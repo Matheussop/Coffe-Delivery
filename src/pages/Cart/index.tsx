@@ -1,22 +1,59 @@
-import { useState } from "react";
-import { InputText } from "../../components/Input";
-import { SelectableButton } from "../../components/SelectableButton";
-import { ItemContainer } from "../Home/components/CoffeItem/styles";
-import { AddressContainer, AddressForm, ComplementContainer, Container, 
-  ItemsContainer, NumberContainer, PaymentOptions, 
-  PaymentOptionsContainer, QuantityContainer, ShopContainer, ShopInfoContainer, StreetContainer, ZipContainer } from "./styles"
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Trash, Plus, Minus, MapPinLine, CurrencyDollar, Money, Bank, CreditCard } from "phosphor-react";
 
+
+import { InputText } from "../../components/Input";
+import { SelectableButton } from "../../components/SelectableButton";
+import { AddressContainer, AddressForm, ComplementContainer, Container, 
+  ItemsContainer, NumberContainer, PaymentOptions, 
+  PaymentOptionsContainer, QuantityContainer, ShopContainer, 
+  ShopInfoContainer, StreetContainer, ZipContainer,
+  ItemContainer, TrashContainer, ItemButtons, PriceContainer,
+  Separator, TaxTransportation, TotalContainer, TotalCost, 
+  TotalCostItems, ItemButtonsContainer } from "./styles"
+import { CartContext } from "../../contexts/CartContext";
+import { CoffeeItemProps } from "../Home/components/CoffeItem";
+import { CoffeeData } from "../Home/CoffeesData";
+
+const ItemsData: CoffeeItemProps[] = CoffeeData
+
+export type ItemsProps = Omit<CoffeeItemProps, 'price'> & { 
+  price: string
+  quantity: number;
+
+};
+
 export function Cart() {
+  const { items } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'debit' | 'money'>('credit');
-  const price = 9.90
-  const priceFormatted = price.toFixed(2).toString().replace('.',',');
+  const [listemItem, setListemItem] = useState<ItemsProps[]>([]);
   const quantityValue = 1
+  const navigate = useNavigate();
+
   const handleSubQuantityItem = () => {}
   const handleAddQuantityItem = () => {}
   const handleChangePaymentMethod = (paymentType: 'credit' | 'debit' | 'money') => {
     setPaymentMethod(paymentType)
   }
+
+  useEffect(() => {
+    const listItem: ItemsProps[] = []
+    if (items && items.length > 0) {
+      items.forEach(item => {
+        const { price, ...isItem} = ItemsData.find(itemData => item.id === itemData.id)!
+        if(isItem) {
+          const priceFormatted = price.toFixed(2).toString().replace('.',',');
+          
+          listItem.push({ quantity: quantityValue, price: priceFormatted, ...isItem})
+        }else {
+          alert('Item does not exist')
+        }
+      })
+      setListemItem(listItem)
+    }
+
+  }, [items, navigate])
 
   return (
     <Container>
@@ -77,23 +114,56 @@ export function Cart() {
     <ItemsContainer>
       <h1>Cafés selecionados</h1>
       <ShopContainer>
-        <ItemContainer>
         <div>
-          <p>R$ <span>{priceFormatted}</span></p>
-          <QuantityContainer>
-            <button onClick={handleSubQuantityItem}>
-              <Minus weight="bold"/>
-            </button>
-            <span>{quantityValue}</span>
-            <button onClick={handleAddQuantityItem}>
-              <Plus weight="bold"/>
-            </button>
-          </QuantityContainer>
-          <button onClick={() => {}}>
-            <Trash weight="fill" size={22}/>
-          </button>
+          {
+            listemItem.map((item) => (
+            <>
+              <ItemContainer key={item.id}>
+                <img src={item.image} alt="Capuccino"/>
+                <div>
+                  <h3>{item.name}</h3>
+                  <ItemButtons>
+                    <QuantityContainer>
+                    <button onClick={handleSubQuantityItem}>
+                      <Minus weight="bold"/>
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button onClick={handleAddQuantityItem}>
+                      <Plus weight="bold"/>
+                    </button>
+                    </QuantityContainer>
+                    <TrashContainer onClick={() => {}}>
+                      <Trash weight="fill" size={22}/>
+                      REMOVER
+                    </TrashContainer>
+                  </ItemButtons>
+              </div>
+              <PriceContainer>
+                <span>R$ {item.price}</span>
+              </PriceContainer>
+            </ItemContainer>
+            <Separator/>
+           </>
+          ))
+        }
+        <TotalContainer>
+          <TotalCostItems>
+            <h3>Total de itens</h3>
+            <span>R$ 0,00</span>
+          </TotalCostItems>
+          <TaxTransportation>
+            <h3>Entrega</h3>
+            <span>R$ 0,00</span>
+          </TaxTransportation>
+          <TotalCost>
+            <h3>Total</h3>
+            <span>R$ 0,00</span>
+          </TotalCost>
+        </TotalContainer>
         </div>
-        </ItemContainer>
+        <ItemButtonsContainer onClick={() => navigate('/')}>
+            CONFIRMAR PEDIDO
+        </ItemButtonsContainer>
       </ShopContainer>
     </ItemsContainer>
   </Container>
