@@ -38,6 +38,9 @@ export function Cart() {
   
   const handleSubQuantityItem = (itemId: string) => {
     const item = listemItem.find((item) => item.id === itemId);
+    if (item && item.quantity <= 0) {
+      return
+    }
     if (item) {
       const newQuantity = item.quantity - 1;
       const priceFormatted = (item.price*newQuantity).toFixed(2).toString().replace('.',',');
@@ -56,6 +59,11 @@ export function Cart() {
       setListemItem(listemItem.map((item) => item.id === itemId? {...item, fullPrice: priceFormatted, quantity: newQuantity } : item));
       calculateFullPriceShop()
     }
+  }
+
+  const handleRemoveItem = (itemId: string) => {
+    setListemItem(listemItem.filter((item) => item.id !== itemId));
+    calculateFullPriceShop()
   }
 
   const handleChangePaymentMethod = (paymentType: 'credit' | 'debit' | 'money') => {
@@ -160,7 +168,7 @@ export function Cart() {
                       <Plus weight="bold"/>
                     </button>
                     </QuantityContainer>
-                    <TrashContainer onClick={() => {}}>
+                    <TrashContainer onClick={() => handleRemoveItem(item.id)}>
                       <Trash weight="fill" size={22}/>
                       REMOVER
                     </TrashContainer>
