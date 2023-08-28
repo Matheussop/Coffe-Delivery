@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash, Plus, Minus, MapPinLine, CurrencyDollar, Money, Bank, CreditCard } from "phosphor-react";
 
@@ -19,23 +19,51 @@ import { CoffeeData } from "../Home/CoffeesData";
 const ItemsData: CoffeeItemProps[] = CoffeeData
 
 export type ItemsProps = Omit<CoffeeItemProps, 'price'> & { 
-  price: string
+  price: number
   quantity: number;
-
+  fullPrice: string;
 };
 
 export function Cart() {
   const { items } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'debit' | 'money'>('credit');
   const [listemItem, setListemItem] = useState<ItemsProps[]>([]);
-  const quantityValue = 1
+  const [fullPriceShop, setFullPriceShop] = useState('');
   const navigate = useNavigate();
 
-  const handleSubQuantityItem = () => {}
-  const handleAddQuantityItem = () => {}
+  const calculateFullPriceShop = useCallback(() => {
+    const price = listemItem.reduce((acc, item) => acc + (item.price * item.quantity), 0)
+    setFullPriceShop(price.toFixed(2).toString().replace('.',','))
+  }, [listemItem]);
+  
+  const handleSubQuantityItem = (itemId: string) => {
+    const item = listemItem.find((item) => item.id === itemId);
+    if (item) {
+      const newQuantity = item.quantity - 1;
+      const priceFormatted = (item.price*newQuantity).toFixed(2).toString().replace('.',',');
+      setListemItem(() => {
+        return listemItem.map((item) => item.id === itemId? {...item, fullPrice: priceFormatted, quantity: newQuantity } : item)
+      });
+      calculateFullPriceShop()
+    }
+    
+  }
+  const handleAddQuantityItem = (itemId: string) => {
+    const item = listemItem.find((item) => item.id === itemId);
+    if (item) {
+      const newQuantity = item.quantity + 1;
+      const priceFormatted = (item.price*newQuantity).toFixed(2).toString().replace('.',',');
+      setListemItem(listemItem.map((item) => item.id === itemId? {...item, fullPrice: priceFormatted, quantity: newQuantity } : item));
+      calculateFullPriceShop()
+    }
+  }
+
   const handleChangePaymentMethod = (paymentType: 'credit' | 'debit' | 'money') => {
     setPaymentMethod(paymentType)
   }
+  useEffect(() => {
+    listemItem && calculateFullPriceShop()
+  }, [listemItem, calculateFullPriceShop])
 
   useEffect(() => {
     const listItem: ItemsProps[] = []
@@ -43,9 +71,9 @@ export function Cart() {
       items.forEach(item => {
         const { price, ...isItem} = ItemsData.find(itemData => item.id === itemData.id)!
         if(isItem) {
-          const priceFormatted = price.toFixed(2).toString().replace('.',',');
+          const priceFormatted = (price*item.quantity).toFixed(2).toString().replace('.',',');
           
-          listItem.push({ quantity: quantityValue, price: priceFormatted, ...isItem})
+          listItem.push({ quantity: item.quantity, fullPrice: priceFormatted, price, ...isItem})
         }else {
           alert('Item does not exist')
         }
@@ -124,11 +152,11 @@ export function Cart() {
                   <h3>{item.name}</h3>
                   <ItemButtons>
                     <QuantityContainer>
-                    <button onClick={handleSubQuantityItem}>
+                    <button onClick={() => handleSubQuantityItem(item.id)}>
                       <Minus weight="bold"/>
                     </button>
                     <span>{item.quantity}</span>
-                    <button onClick={handleAddQuantityItem}>
+                    <button onClick={() => handleAddQuantityItem(item.id)}>
                       <Plus weight="bold"/>
                     </button>
                     </QuantityContainer>
@@ -139,7 +167,7 @@ export function Cart() {
                   </ItemButtons>
               </div>
               <PriceContainer>
-                <span>R$ {item.price}</span>
+                <span>R$ {item.fullPrice}</span>
               </PriceContainer>
             </ItemContainer>
             <Separator/>
@@ -149,7 +177,7 @@ export function Cart() {
         <TotalContainer>
           <TotalCostItems>
             <h3>Total de itens</h3>
-            <span>R$ 0,00</span>
+            <span>R$ {fullPriceShop}</span>
           </TotalCostItems>
           <TaxTransportation>
             <h3>Entrega</h3>
