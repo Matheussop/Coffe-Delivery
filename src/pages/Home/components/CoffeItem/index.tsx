@@ -18,11 +18,11 @@ export function CoffeeItem(
   const priceFormatted = price.toFixed(2).toString().replace('.',',');
  
   const [ itemInCart, setItemInCart] = useState<Item>({
-    id,
+    id: '',
     quantity: 0
   } as Item);
 
-  const { items, addItem } = useContext(CartContext);
+  const { items, addItem, changeItemQuantity } = useContext(CartContext);
   useEffect(() => {
     const item = items.find((item) => item.id === id);
     if(item){
@@ -44,11 +44,13 @@ export function CoffeeItem(
       alert('A Quantidade deve ser maior que 0');
       return
     }
-    if(itemInCart) {
+    if(itemInCart.id == '') {
       addItem({
         id,
         quantity: itemInCart.quantity,
       });
+    }else {
+      changeItemQuantity(id, itemInCart.quantity);
     }
   }
 

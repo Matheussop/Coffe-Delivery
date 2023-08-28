@@ -7,7 +7,8 @@ export interface Item {
 
 interface CartContextType{
   items: Item[],
-  addItem: (itemId: Item) => void
+  addItem: (itemId: Item) => void,
+  changeItemQuantity: (itemId: string, quantity: number) => void
 }
 
 export const CartContext = createContext({} as CartContextType)
@@ -24,8 +25,21 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     setItems(itemsAux);
   }
 
+  function changeItemQuantity(itemId: string, quantity: number) {
+    const itemsAux = items.map(item => {
+      if(item.id === itemId){
+        return {
+        ...item,
+          quantity
+        }
+      }
+      return item;
+    });
+    setItems(itemsAux);
+  }
+
   return (
-    <CartContext.Provider value={{ items, addItem }}>
+    <CartContext.Provider value={{ items, addItem, changeItemQuantity }}>
       {children}
     </CartContext.Provider>
   )
