@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useState } from 'react'
 
-interface Item { 
+export interface Item { 
   id: string
   quantity: number
 }

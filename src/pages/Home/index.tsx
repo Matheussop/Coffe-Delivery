@@ -5,17 +5,18 @@ import {
   IntroContainer, IntroImage, IntroTextContainer,
   SlugsContainer, Subtitle, Title, TitleContent
 } from "./style";
+import { Coffee, ShoppingCart, Package, Timer } from "phosphor-react";
 
 import InfoImg from "../../assets/Info.png";
 import { Slug } from "./components/Slug";
 import { CoffeeItemProps } from "./components/CoffeItem";
-import { Coffee, ShoppingCart, Package, Timer } from "phosphor-react";
 import { CoffeeItem } from "./components/CoffeItem";
 import { CoffeeData } from "./CoffeesData";
 
 const Items: CoffeeItemProps[] = CoffeeData
 
 export function Home() {
+
   return (
     <HomeContainer>
       <IntroContainer>

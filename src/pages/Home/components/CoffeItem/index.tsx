@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { ShoppingCart, Plus, Minus } from "phosphor-react";
 
 import { ItemContainer, ItemInfo, QuantityContainer, TypeContainer } from "./styles";
-import { CartContext } from '../../../../contexts/CartContext'
+import { CartContext, Item } from '../../../../contexts/CartContext'
 
 export interface CoffeeItemProps{
   id: string;
@@ -17,32 +17,38 @@ export function CoffeeItem(
   { id, name, type, description, image, price }: CoffeeItemProps){
   const priceFormatted = price.toFixed(2).toString().replace('.',',');
  
-  const [quantityValue, setQuantityValue] = useState<number>(0);
-  
-  const { items, addItem } = useContext(CartContext);
+  const [ itemInCart, setItemInCart] = useState<Item>({
+    id,
+    quantity: 0
+  } as Item);
 
+  const { items, addItem } = useContext(CartContext);
+  useEffect(() => {
+    const item = items.find((item) => item.id === id);
+    if(item){
+      setItemInCart(item);
+    }
+
+  }, [items, id])
   const handleSubQuantity = () => {
-    if(quantityValue > 0) {
-      setQuantityValue(quantityValue - 1);
+    if(itemInCart.quantity > 0) {
+      setItemInCart((prevState) => ({...prevState, quantity: prevState.quantity - 1 }));
     }
   }
   const handleAddQuantity = () => {
-    setQuantityValue(quantityValue + 1);
+    setItemInCart((prevState) => ({...prevState, quantity: prevState.quantity + 1 }));
   }
 
   const handleAddItem = () => {
-    if( quantityValue <= 0) {
+    if( itemInCart.quantity <= 0) {
       alert('A Quantidade deve ser maior que 0');
       return
     }
-    const itemInCart = items.find((item) => item.id === id);
-    if(!itemInCart) {
+    if(itemInCart) {
       addItem({
         id,
-        quantity: quantityValue,
+        quantity: itemInCart.quantity,
       });
-    }else {
-      alert('Este já adicionado ao carrinho!');
     }
   }
 
@@ -66,7 +72,7 @@ export function CoffeeItem(
             <button onClick={handleSubQuantity}>
               <Minus weight="bold"/>
             </button>
-            <span>{quantityValue}</span>
+            <span>{itemInCart.quantity}</span>
             <button onClick={handleAddQuantity}>
               <Plus weight="bold"/>
             </button>
