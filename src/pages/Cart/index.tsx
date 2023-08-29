@@ -15,7 +15,7 @@ import { AddressContainer, AddressForm, ComplementContainer, Container,
   ItemContainer, TrashContainer, ItemButtons, PriceContainer,
   Separator, TaxTransportation, TotalContainer, TotalCost, 
   TotalCostItems, ItemButtonsContainer, FormError, CityContainer,
-   DistrictContainer, StateContainer } from "./styles"
+   DistrictContainer, StateContainer, ItemContainerSeparator } from "./styles"
 import { CartContext } from "../../contexts/CartContext";
 import { CoffeeItemProps } from "../Home/components/CoffeItem";
 import { CoffeeData } from "../Home/CoffeesData";
@@ -218,33 +218,33 @@ export function Cart() {
         <div>
           {
             listemItem.map((item) => (
-            <>
+            <ItemContainerSeparator key={item.id}>
               <ItemContainer key={item.id}>
-                <img src={item.image} alt="Capuccino"/>
-                <div>
-                  <h3>{item.name}</h3>
-                  <ItemButtons>
-                    <QuantityContainer>
-                    <button onClick={() => handleSubQuantityItem(item.id)}>
-                      <Minus weight="bold"/>
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => handleAddQuantityItem(item.id)}>
-                      <Plus weight="bold"/>
-                    </button>
-                    </QuantityContainer>
-                    <TrashContainer onClick={() => handleRemoveItem(item.id)}>
-                      <Trash weight="fill" size={22}/>
-                      REMOVER
-                    </TrashContainer>
-                  </ItemButtons>
-              </div>
-              <PriceContainer>
-                <span>R$ {item.fullPrice}</span>
-              </PriceContainer>
-            </ItemContainer>
-            <Separator/>
-           </>
+                  <img src={item.image} alt="Capuccino"/>
+                  <div>
+                    <h3>{item.name}</h3>
+                    <ItemButtons>
+                      <QuantityContainer>
+                      <button onClick={() => handleSubQuantityItem(item.id)}>
+                        <Minus weight="bold"/>
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => handleAddQuantityItem(item.id)}>
+                        <Plus weight="bold"/>
+                      </button>
+                      </QuantityContainer>
+                      <TrashContainer onClick={() => handleRemoveItem(item.id)}>
+                        <Trash weight="fill" size={22}/>
+                        REMOVER
+                      </TrashContainer>
+                    </ItemButtons>
+                </div>
+                <PriceContainer>
+                  <span>R$ {item.fullPrice}</span>
+                </PriceContainer>
+              </ItemContainer>
+              <Separator/>
+           </ItemContainerSeparator>
           ))
         }
         <TotalContainer>

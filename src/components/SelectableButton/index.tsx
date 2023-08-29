@@ -13,7 +13,7 @@ export function SelectableButton({ text, icon, isSelect, typeMethod, ...props }:
   props.selected = typeMethod === isSelect ? true : false;	
   
   return (
-    <ButtonContainer {...props}>
+    <ButtonContainer type='button' {...props}>
       {icon && 
         <IconContainer>
           {cloneElement(icon, { size: '1.2rem' })}

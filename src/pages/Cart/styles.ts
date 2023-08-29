@@ -217,6 +217,12 @@ export const ItemContainer = styled.div`
 
 `;
 
+export const ItemContainerSeparator = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
 export const PriceContainer = styled.div`
   display: flex;
   flex-direction: row;
