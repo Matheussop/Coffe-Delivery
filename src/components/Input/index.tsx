@@ -1,16 +1,18 @@
 
-import { ComponentProps } from 'react'
+import { ComponentProps, ElementRef, forwardRef} from 'react'
+
 import { Input, InputContainer, Suffix } from "./styles";
 
 export interface TextInputProps extends ComponentProps<typeof Input> {
   suffix?: string
 }
 
-export function InputText({ suffix, ...props }: TextInputProps) { 
+export const InputText  = forwardRef<ElementRef<typeof Input>, TextInputProps>(
+({ suffix,...props }: TextInputProps, ref) => { 
   return (
     <InputContainer >
-      <Input type="text" {...props} />
+      <Input ref={ref} {...props} />
       {!!suffix && <Suffix>{suffix}</Suffix>}
     </InputContainer>
   )
-}
+})

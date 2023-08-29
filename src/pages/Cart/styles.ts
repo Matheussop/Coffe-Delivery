@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.form`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
   max-width: 64%;
-  margin: 5.875rem 0;
+  padding: 5.875rem 0;
   gap: 2rem;
 
 
@@ -103,6 +103,12 @@ export const ComplementContainer = styled.div`
   grid-column-end: 4;
   grid-row-start: 3;
 `;
+
+export const DistrictContainer = styled.div``;
+
+export const CityContainer = styled.div``;
+
+export const StateContainer = styled.div``;
 
 export const PaymentOptionsContainer = styled.div`
   display: flex;
@@ -230,12 +236,12 @@ export const Separator = styled.div`
   color: ${(props) => props.theme.colors["base-button"]};
 `;
 
-
 export const TotalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
 `;
+
 export const TotalCostItems = styled.div`
   display: flex;
   flex-direction: row;
@@ -256,7 +262,9 @@ export const TotalCostItems = styled.div`
   }
 
 `;
+
 export const TaxTransportation = styled(TotalCostItems)``;
+
 export const TotalCost = styled(TotalCostItems)`
   h3, span{
     color: ${(props) => props.theme.colors["base-subtitle"]};
@@ -277,3 +285,9 @@ export const ItemButtonsContainer = styled.button`
   border-radius: 0.4rem;
   margin-top: 1.4rem;
 `;
+
+export const FormError = styled.p`
+  position: absolute;
+  padding: 0.4rem;
+  color: #F75a68 !important;
+`

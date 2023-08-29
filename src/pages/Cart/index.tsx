@@ -1,6 +1,9 @@
 import { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash, Plus, Minus, MapPinLine, CurrencyDollar, Money, Bank, CreditCard } from "phosphor-react";
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 
 import { InputText } from "../../components/Input";
@@ -11,7 +14,8 @@ import { AddressContainer, AddressForm, ComplementContainer, Container,
   ShopInfoContainer, StreetContainer, ZipContainer,
   ItemContainer, TrashContainer, ItemButtons, PriceContainer,
   Separator, TaxTransportation, TotalContainer, TotalCost, 
-  TotalCostItems, ItemButtonsContainer } from "./styles"
+  TotalCostItems, ItemButtonsContainer, FormError, CityContainer,
+   DistrictContainer, StateContainer } from "./styles"
 import { CartContext } from "../../contexts/CartContext";
 import { CoffeeItemProps } from "../Home/components/CoffeItem";
 import { CoffeeData } from "../Home/CoffeesData";
@@ -24,16 +28,45 @@ export type ItemsProps = Omit<CoffeeItemProps, 'price'> & {
   fullPrice: string;
 };
 
+const shopFormValidationSchema = z.object({
+  street: z.string().min(3, { message: 'Informe o nome da rua'}),
+  streetNumber: z.string().min(1,{ message: 'Informe o número da rua'}),
+  district: z.string().min(3, { message: 'Informe o bairro'}),
+  city: z.string().min(3, { message: 'Informe a cidade'}),
+  state: z.string().length(2, 'Informe a sigla do estado'),
+  complement: z.string().optional(),
+  zipCode: z.string().regex(new RegExp("\\d{5}-\\d{3}"), { message: 'Informe o código postal'})
+  .refine((value) => {
+    if (value.length >= 6) {
+      return value.substring(0, 4) + "-" + value.substring(5);
+    }else 
+    return value
+  }),
+})
+
+type ShopFormData = z.infer<typeof shopFormValidationSchema>
+
 export function Cart() {
+
   const { items } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'debit' | 'money'>('credit');
   const [listemItem, setListemItem] = useState<ItemsProps[]>([]);
   const [fullPriceShop, setFullPriceShop] = useState('');
+  const [fullPriceWithTax, setFullPriceWithTax] = useState('');
   const navigate = useNavigate();
+  const tax = 3.50;
+  const { 
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<ShopFormData>({
+    resolver: zodResolver(shopFormValidationSchema),
+  })
 
   const calculateFullPriceShop = useCallback(() => {
     const price = listemItem.reduce((acc, item) => acc + (item.price * item.quantity), 0)
     setFullPriceShop(price.toFixed(2).toString().replace('.',','))
+    setFullPriceWithTax((price + tax).toFixed(2).toString().replace('.',','))
   }, [listemItem]);
   
   const handleSubQuantityItem = (itemId: string) => {
@@ -51,6 +84,7 @@ export function Cart() {
     }
     
   }
+
   const handleAddQuantityItem = (itemId: string) => {
     const item = listemItem.find((item) => item.id === itemId);
     if (item) {
@@ -69,6 +103,11 @@ export function Cart() {
   const handleChangePaymentMethod = (paymentType: 'credit' | 'debit' | 'money') => {
     setPaymentMethod(paymentType)
   }
+
+  function handleRegister(item){
+    console.log(item)
+  }
+
   useEffect(() => {
     listemItem && calculateFullPriceShop()
   }, [listemItem, calculateFullPriceShop])
@@ -89,63 +128,89 @@ export function Cart() {
       setListemItem(listItem)
     }
 
+    // Here would come the logic of tax calculation
   }, [items, navigate])
 
   return (
-    <Container>
+    <Container onSubmit={handleSubmit(handleRegister)}>
     <ShopInfoContainer >
-      <h1>Complete seu pedido</h1>
-      <AddressContainer>
-        <div>
-          <MapPinLine size={22} weight='light'/>
+        <h1>Complete seu pedido</h1>
+        <AddressContainer>
           <div>
-            <h3>Endereço de Entrega</h3>
-            <p>Informe o endereço onde deseja receber seu pedido</p>
+            <MapPinLine size={22} weight='light'/>
+            <div>
+              <h3>Endereço de Entrega</h3>
+              <p>Informe o endereço onde deseja receber seu pedido</p>
+            </div>
           </div>
-        </div>
-        <AddressForm>
-          <ZipContainer>
-            <InputText placeholder="CEP"/>
-          </ZipContainer>
-          <StreetContainer>
-            <InputText placeholder="Rua"/>
-          </StreetContainer>
-          <NumberContainer>
-            <InputText placeholder="Numero"/>
-          </NumberContainer>
-          <ComplementContainer>
-            <InputText placeholder="Complemento" suffix="Opcional"/>
-          </ComplementContainer>
-          <InputText placeholder="Bairro"/>
-          <InputText placeholder="Cidade"/>
-          <InputText placeholder="Estado"/>
-        </AddressForm>
-      </AddressContainer>
-      <PaymentOptionsContainer >
-        <div>
-          <CurrencyDollar size={22} weight='light'/>
+          <AddressForm>
+            <ZipContainer>
+              <InputText placeholder="CEP" {...register("zipCode")}/>
+              {errors.zipCode && (
+                <FormError>{errors.zipCode.message}</FormError>
+              )}
+            </ZipContainer>
+            <StreetContainer>
+              <InputText placeholder="Rua" {...register("street")}/>
+              {errors.street && (
+                <FormError>{errors.street.message}</FormError>
+              )}
+            </StreetContainer>
+            <NumberContainer>
+              <InputText type="number" placeholder="Numero"  {...register("streetNumber")}/>
+              {errors.streetNumber && (
+                <FormError>{errors.streetNumber.message}</FormError>
+              )}
+            </NumberContainer>
+            <ComplementContainer>
+              <InputText placeholder="Complemento" 
+              suffix="Opcional" {...register("complement")}/>
+            </ComplementContainer>
+            <DistrictContainer>
+              <InputText placeholder="Bairro" {...register("district")}/>
+              {errors.district && (
+                <FormError>{errors.district.message}</FormError>
+              )}
+            </DistrictContainer>
+            <CityContainer>
+              <InputText placeholder="Cidade" {...register("city")}/>
+              {errors.city && (
+                <FormError>{errors.city.message}</FormError>
+              )}
+            </CityContainer>
+            <StateContainer>
+              <InputText placeholder="Estado" {...register("state")}/>
+              {errors.state && (
+                <FormError>{errors.state.message}</FormError>
+              )}
+            </StateContainer>
+          </AddressForm>
+        </AddressContainer>
+        <PaymentOptionsContainer >
           <div>
-            <h3>Pagamento</h3>
-            <p>O pagamento é feito na entrega. Escolha a forma que deseja pagar</p>
+            <CurrencyDollar size={22} weight='light'/>
+            <div>
+              <h3>Pagamento</h3>
+              <p>O pagamento é feito na entrega. Escolha a forma que deseja pagar</p>
+            </div>
           </div>
-        </div>
 
 
-        <PaymentOptions>
-          <SelectableButton typeMethod='credit' 
-            isSelect={paymentMethod}
-            onClick={() => handleChangePaymentMethod('credit')} 
-            icon={<CreditCard/>} text='CARTÃO DE CRÉDITO'/>
-          <SelectableButton typeMethod='debit' 
-            isSelect={paymentMethod}
-            onClick={() => handleChangePaymentMethod('debit')}
-            icon={<Bank/>} text='CARTÃO DE DÉBITO'/>
-          <SelectableButton typeMethod='money' 
-            isSelect={paymentMethod}
-            onClick={() => handleChangePaymentMethod('money')}
-            icon={<Money/>} text='DINHEIRO'/>
-        </PaymentOptions>
-      </PaymentOptionsContainer>
+          <PaymentOptions>
+            <SelectableButton typeMethod='credit' 
+              isSelect={paymentMethod}
+              onClick={() => handleChangePaymentMethod('credit')} 
+              icon={<CreditCard/>} text='CARTÃO DE CRÉDITO'/>
+            <SelectableButton typeMethod='debit' 
+              isSelect={paymentMethod}
+              onClick={() => handleChangePaymentMethod('debit')}
+              icon={<Bank/>} text='CARTÃO DE DÉBITO'/>
+            <SelectableButton typeMethod='money' 
+              isSelect={paymentMethod}
+              onClick={() => handleChangePaymentMethod('money')}
+              icon={<Money/>} text='DINHEIRO'/>
+          </PaymentOptions>
+        </PaymentOptionsContainer>
     </ShopInfoContainer>
     <ItemsContainer>
       <h1>Cafés selecionados</h1>
@@ -189,15 +254,15 @@ export function Cart() {
           </TotalCostItems>
           <TaxTransportation>
             <h3>Entrega</h3>
-            <span>R$ 0,00</span>
+            <span>R$ {tax.toFixed(2).toString().replace('.',',')}</span>
           </TaxTransportation>
           <TotalCost>
             <h3>Total</h3>
-            <span>R$ 0,00</span>
+            <span>R$ {fullPriceWithTax}</span>
           </TotalCost>
         </TotalContainer>
         </div>
-        <ItemButtonsContainer onClick={() => navigate('/')}>
+        <ItemButtonsContainer type="submit" disabled={isSubmitting}>
             CONFIRMAR PEDIDO
         </ItemButtonsContainer>
       </ShopContainer>

@@ -22,7 +22,7 @@ export function CoffeeItem(
     quantity: 0
   } as Item);
 
-  const { items, addItem, changeItemQuantity } = useContext(CartContext);
+  const { items, addItem, changeItemQuantity, removeItem } = useContext(CartContext);
   useEffect(() => {
     const item = items.find((item) => item.id === id);
     if(item){
@@ -40,17 +40,26 @@ export function CoffeeItem(
   }
 
   const handleAddItem = () => {
-    if( itemInCart.quantity <= 0) {
-      alert('A Quantidade deve ser maior que 0');
-      return
-    }
     if(itemInCart.id == '') {
+      if( itemInCart.quantity <= 0) {
+        alert('A Quantidade deve ser maior que 0');
+        return
+      }
+
       addItem({
         id,
         quantity: itemInCart.quantity,
       });
-    }else {
-      changeItemQuantity(id, itemInCart.quantity);
+    } else {
+      if( itemInCart.quantity < 0) {
+        alert('A Quantidade deve ser maior que 0');
+        return
+      } else if (itemInCart.quantity == 0){
+        removeItem(id)
+      }else {
+        changeItemQuantity(id, itemInCart.quantity);
+      }
+
     }
   }
 
