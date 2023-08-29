@@ -17,6 +17,7 @@ export interface Address{
 
 interface CartContextType{
   items: Item[],
+  setItemsContext: (items: Item[]) => void,
   addItem: (itemId: Item) => void,
   changeItemQuantity: (itemId: string, quantity: number) => void,
   removeItem: (itemId: string) => void,
@@ -64,13 +65,17 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     setItems(itemsAux);
   }
 
+  function setItemsContext(items: Item[]) {
+    setItems(items);
+  }
+
   function setPurchaseItemsContext(objectPurchase: PurchaseItemType) {
     setPurchaseItems(objectPurchase);
   }
 
   return (
     <CartContext.Provider value={{ 
-      items, addItem, 
+      items, setItemsContext, addItem, 
       changeItemQuantity, removeItem,
       getPurchaseItems: purchaseItems, setPurchaseItemsContext
     }}>

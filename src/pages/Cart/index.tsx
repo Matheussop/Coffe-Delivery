@@ -33,7 +33,7 @@ const shopFormValidationSchema = z.object({
   street: z.string().min(3, { message: 'Informe o nome da rua'}),
   streetNumber: z.string().min(1,{ message: 'Informe o número da rua'}),
   district: z.string().min(3, { message: 'Informe o bairro'}),
-  city: z.string().min(3, { message: 'Informe a cidade'}),
+  city: z.string().min(2, { message: 'Informe a cidade'}),
   state: z.string().length(2, 'Informe a sigla do estado'),
   complement: z.string().optional(),
   zipCode: z.string().regex(new RegExp("\\d{5}-\\d{3}"), { message: 'Informe o código postal'})
@@ -49,7 +49,7 @@ type ShopFormData = z.infer<typeof shopFormValidationSchema>
 
 export function Cart() {
 
-  const { items, setPurchaseItemsContext } = useContext(CartContext);
+  const { items, setItemsContext, setPurchaseItemsContext } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'debit' | 'money'>('credit');
   const [listemItem, setListemItem] = useState<ItemsProps[]>([]);
   const [fullPriceShop, setFullPriceShop] = useState('');
@@ -130,6 +130,8 @@ export function Cart() {
     } as PurchaseItemType
     console.log(purchaseItem)
     setPurchaseItemsContext(purchaseItem)
+    setItemsContext([]);
+    navigate('/success')
   }
 
   useEffect(() => {
