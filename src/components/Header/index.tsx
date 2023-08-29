@@ -23,9 +23,11 @@ export function Header() {
         <NavLink to="/cart" title="Cart">
           <ShoppingCart size={22} weight='fill'/>
         </NavLink>
-        <ItemsQuantityContainer>
+        { items.length > 0 && (
+          <ItemsQuantityContainer>
           <p>{items.length}</p>
-        </ItemsQuantityContainer>
+          </ItemsQuantityContainer>
+        )}
 
       </nav>
     </HeaderContainer>

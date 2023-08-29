@@ -38,14 +38,24 @@ export const Subtitle = styled.h2`
 `
 export const PurchaseInfo = styled.div`
   display: flex;
-  border: 1px solid ${(props) => props.theme.colors["base-subtitle"]};
-  border-radius: 6px 36px 6px 36px;
   width: 100%;
-  padding: 2.5rem;
   flex-direction: column;
   justify-content: center;
   gap: 2rem;
+  padding: 2.5rem;
+  border-radius: 6px 36px 6px 36px;
+  background-color: ${(props) => props.theme.colors.background};
+  height: 100%;
 `
+
+export const PurchaseInfoBorder = styled.div`
+  border-radius: 6px 36px 6px 36px;
+  padding: 1px;
+  width: 100%;
+  
+  background: linear-gradient(to right, rgb(219, 172, 44), rgb(128, 71, 248));
+`;
+
 export const AddressInfo = styled.div`
   display: flex;
   flex-direction: row;
