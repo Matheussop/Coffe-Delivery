@@ -5,11 +5,30 @@ export interface Item {
   quantity: number
 }
 
+export interface Address{
+  street: string
+  city: string
+  state: string
+  streetNumber: string
+  district: string
+  complement: string
+  zipCode: string
+}
+
 interface CartContextType{
   items: Item[],
   addItem: (itemId: Item) => void,
-  changeItemQuantity: (itemId: string, quantity: number) => void
-  removeItem: (itemId: string) => void
+  changeItemQuantity: (itemId: string, quantity: number) => void,
+  removeItem: (itemId: string) => void,
+  setPurchaseItemsContext: (objectPurchase: PurchaseItemType) => void
+  getPurchaseItems: PurchaseItemType
+}
+
+export interface PurchaseItemType {
+  id: string,
+  address: Address,
+  paymentMethod: 'credit' | 'debit' | 'money'
+  items: Item[],
 }
 
 export const CartContext = createContext({} as CartContextType)
@@ -20,6 +39,7 @@ interface CartContextProviderProps {
 
 export function CartContextProvider({ children }: CartContextProviderProps){
   const [items, setItems] = useState<Item[]>([]);
+  const [purchaseItems, setPurchaseItems] = useState<PurchaseItemType>({} as PurchaseItemType);
 
   function addItem({id, quantity}: Item) {
     const itemsAux = [...items, { id, quantity }];
@@ -44,8 +64,16 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     setItems(itemsAux);
   }
 
+  function setPurchaseItemsContext(objectPurchase: PurchaseItemType) {
+    setPurchaseItems(objectPurchase);
+  }
+
   return (
-    <CartContext.Provider value={{ items, addItem, changeItemQuantity, removeItem }}>
+    <CartContext.Provider value={{ 
+      items, addItem, 
+      changeItemQuantity, removeItem,
+      getPurchaseItems: purchaseItems, setPurchaseItemsContext
+    }}>
       {children}
     </CartContext.Provider>
   )

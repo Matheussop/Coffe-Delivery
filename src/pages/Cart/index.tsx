@@ -4,6 +4,7 @@ import { Trash, Plus, Minus, MapPinLine, CurrencyDollar, Money, Bank, CreditCard
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { v4 as uuid } from 'uuid';
 
 
 import { InputText } from "../../components/Input";
@@ -16,7 +17,7 @@ import { AddressContainer, AddressForm, ComplementContainer, Container,
   Separator, TaxTransportation, TotalContainer, TotalCost, 
   TotalCostItems, ItemButtonsContainer, FormError, CityContainer,
    DistrictContainer, StateContainer, ItemContainerSeparator } from "./styles"
-import { CartContext } from "../../contexts/CartContext";
+import { CartContext, PurchaseItemType } from "../../contexts/CartContext";
 import { CoffeeItemProps } from "../Home/components/CoffeItem";
 import { CoffeeData } from "../Home/CoffeesData";
 
@@ -48,7 +49,7 @@ type ShopFormData = z.infer<typeof shopFormValidationSchema>
 
 export function Cart() {
 
-  const { items } = useContext(CartContext);
+  const { items, setPurchaseItemsContext } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'debit' | 'money'>('credit');
   const [listemItem, setListemItem] = useState<ItemsProps[]>([]);
   const [fullPriceShop, setFullPriceShop] = useState('');
@@ -104,8 +105,31 @@ export function Cart() {
     setPaymentMethod(paymentType)
   }
 
-  function handleRegister(item){
-    console.log(item)
+  function handleRegister(adress: ShopFormData){
+    const itemsBuy = listemItem.map((item) => {
+      return {
+        id: item.id,
+        quantity: item.quantity,
+      }
+    })
+
+    const address = {
+      street: adress.street,
+      streetNumber: adress.streetNumber,
+      district: adress.district,
+      city: adress.city,
+      state: adress.state,
+      complement: adress.complement,
+      zipCode: adress.zipCode
+    }
+    const purchaseItem = {
+      id: uuid(),
+      address,
+      paymentMethod: paymentMethod,
+      items: itemsBuy,
+    } as PurchaseItemType
+    console.log(purchaseItem)
+    setPurchaseItemsContext(purchaseItem)
   }
 
   useEffect(() => {
@@ -220,20 +244,20 @@ export function Cart() {
             listemItem.map((item) => (
             <ItemContainerSeparator key={item.id}>
               <ItemContainer key={item.id}>
-                  <img src={item.image} alt="Capuccino"/>
+                  <img src={item.image} alt="Image of Coffee"/>
                   <div>
                     <h3>{item.name}</h3>
                     <ItemButtons>
                       <QuantityContainer>
-                      <button onClick={() => handleSubQuantityItem(item.id)}>
+                      <button type="button" onClick={() => handleSubQuantityItem(item.id)}>
                         <Minus weight="bold"/>
                       </button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleAddQuantityItem(item.id)}>
+                      <button type="button" onClick={() => handleAddQuantityItem(item.id)}>
                         <Plus weight="bold"/>
                       </button>
                       </QuantityContainer>
-                      <TrashContainer onClick={() => handleRemoveItem(item.id)}>
+                      <TrashContainer type="button" onClick={() => handleRemoveItem(item.id)}>
                         <Trash weight="fill" size={22}/>
                         REMOVER
                       </TrashContainer>
