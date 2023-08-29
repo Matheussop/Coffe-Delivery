@@ -26,3 +26,4 @@ Para um bom desafio será necessário estudar sobre reduce em arrays.
 
 ![](public/coffeeDeliveryInfo.png "Screen")
 ![](public/coffeeDeliveryCoffees.png "Screen2")
+![](public/coffeeCartPage.png "Screen3")
